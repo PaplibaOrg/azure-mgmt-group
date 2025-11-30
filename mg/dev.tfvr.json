@@ -1,0 +1,12 @@
+{
+  "mg_prefix": "dev-plb",
+  "environment": "dev",
+  "sequence": "001",
+  "location": "eastus",
+  "tenant_root_group_id": "",
+  "subscription_ids": [],
+  "tags": {
+    "environment": "dev",
+    "managedBy": "terraform"
+  }
+}

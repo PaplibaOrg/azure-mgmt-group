@@ -1,0 +1,27 @@
+{
+  "name": "azure-mgmt-group",
+  "version": "1.0.0",
+  "description": "Terraform modules for managing Azure Management Group hierarchies following CAF best practices.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaplibaOrg/azure-mgmt-group.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/PaplibaOrg/azure-mgmt-group/issues"
+  },
+  "homepage": "https://github.com/PaplibaOrg/azure-mgmt-group#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "husky": "^9.1.7"
+  }
+}
