@@ -34,3 +34,11 @@ variable "first_level_hierarchy" {
     display_name = string
   }))
 }
+
+variable "second_level_hierarchy" {
+  description = "Second level hierarchy management groups as a nested JSON object (e.g., { platform = { management = { display_name = \"Management\" } }, ... })."
+  type = map(map(object({
+    display_name = string
+  })))
+  default = {}
+}

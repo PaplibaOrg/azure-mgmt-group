@@ -21,6 +21,30 @@
           "decommissioned": {
             "display_name": "Decommissioned"
           }
+        },
+        "second_level_hierarchy": {
+          "platform": {
+            "management": {
+              "display_name": "Management"
+            },
+            "connectivity": {
+              "display_name": "Connectivity"
+            },
+            "identity": {
+              "display_name": "Identity"
+            },
+            "security": {
+              "display_name": "Security"
+            }
+          },
+          "landingzones": {
+            "corp": {
+              "display_name": "Corp"
+            },
+            "online": {
+              "display_name": "Online"
+            }
+          }
         }
 
       }
