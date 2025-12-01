@@ -1,5 +1,5 @@
-variable "name" {
-  description = "The name of the management group"
+variable "id" {
+  description = "The ID (name) of the management group"
   type        = string
 }
 

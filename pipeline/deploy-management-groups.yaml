@@ -12,8 +12,6 @@ pool: default
 
 variables:
   serviceConnectionDev: 'id-mg-vending-eus-dev-001'
-  # serviceConnectionTest: '<test-service-connection-name>'
-  # serviceConnectionProd: '<prod-service-connection-name>'
 
 stages:
   # Dev Environment - Plan and Apply
@@ -25,31 +23,3 @@ stages:
       resourceType: 'MG'
       resourceDisplayName: 'Management Groups'
       runPlanInApply: false
-
-  # # Test Environment - Plan, Approval, Apply
-  # - template: templates/deploy-terraform.yaml
-  #   parameters:
-  #     serviceConnection: $(serviceConnectionTest)
-  #     environment: 'Test'
-  #     workingDirectory: 'mg'
-  #     resourceType: 'MG'
-  #     resourceDisplayName: 'Management Groups'
-  #     runPlanInApply: false
-  #     terraformVariables:
-  #       - name: 'environment'
-  #         value: 'test'
-  #     varFile: 'mg.tfvars.json'
-
-  # # Prod Environment - Plan, Approval, Apply
-  # - template: templates/deploy-terraform.yaml
-  #   parameters:
-  #     serviceConnection: $(serviceConnectionProd)
-  #     environment: 'Prod'
-  #     workingDirectory: 'mg'
-  #     resourceType: 'MG'
-  #     resourceDisplayName: 'Management Groups'
-  #     runPlanInApply: false
-  #     terraformVariables:
-  #       - name: 'environment'
-  #         value: 'prod'
-  #     varFile: 'mg.tfvars.json'
