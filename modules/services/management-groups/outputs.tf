@@ -1,7 +1,7 @@
-output "root_mg_id" {
-  description = "The ID of the root management group"
-  value       = module.root_mg.management_group_id
-}
+# output "root_mg_id" {
+#   description = "The ID of the root management group"
+#   value       = module.root_mg.management_group_id
+# }
 
 # output "first_level_mg_ids" {
 #   description = "Map of first level management group IDs"

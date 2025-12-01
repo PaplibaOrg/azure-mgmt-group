@@ -1,11 +1,33 @@
 {
   "company_prefix": "PLB",
   "mg_structure": {
+
     "tenant":{
       "id": "/providers/Microsoft.Management/managementGroups/99e184df-412c-45ed-b033-63f70449fe62",
+
       "root": {
-        "display_name": "Root"
+        "display_name": "Root",
+
+        "first_level_hierarchy": {
+          "platform": {
+            "display_name": "Platform"
+          },
+          "landingzones": {
+            "display_name": "Landingzones"
+          },
+          "sandbox": {
+            "display_name": "Sandbox"
+          },
+          "decommissioned": {
+            "display_name": "Decommissioned"
+          }
+        }
+
       }
+
    } 
+
  }
 }
+
+
