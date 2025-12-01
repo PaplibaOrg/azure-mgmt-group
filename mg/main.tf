@@ -19,6 +19,7 @@ module "management_groups" {
   root_management_group_display_name = local.json_object.mg_structure.tenant.root.display_name
   first_level_hierarchy              = local.json_object.mg_structure.tenant.root.first_level_hierarchy
   second_level_hierarchy             = try(local.json_object.mg_structure.tenant.root.second_level_hierarchy, {})
+}
 
 output "mg_json_object" {
   value = local.json_object
