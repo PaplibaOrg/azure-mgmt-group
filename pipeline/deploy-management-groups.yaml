@@ -25,6 +25,7 @@ stages:
       resourceType: 'MG'
       resourceDisplayName: 'Management Groups'
       runPlanInApply: false
+      varFile: 'mg.tfvars.json'
 
   # # Test Environment - Plan, Approval, Apply
   # - template: templates/deploy-terraform.yaml
@@ -35,6 +36,10 @@ stages:
   #     resourceType: 'MG'
   #     resourceDisplayName: 'Management Groups'
   #     runPlanInApply: false
+  #     terraformVariables:
+  #       - name: 'environment'
+  #         value: 'test'
+  #     varFile: 'mg.tfvars.json'
 
   # # Prod Environment - Plan, Approval, Apply
   # - template: templates/deploy-terraform.yaml
@@ -45,3 +50,7 @@ stages:
   #     resourceType: 'MG'
   #     resourceDisplayName: 'Management Groups'
   #     runPlanInApply: false
+  #     terraformVariables:
+  #       - name: 'environment'
+  #         value: 'prod'
+  #     varFile: 'mg.tfvars.json'

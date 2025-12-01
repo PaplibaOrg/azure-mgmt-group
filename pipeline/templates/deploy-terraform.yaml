@@ -17,6 +17,14 @@ parameters:
     type: boolean
     default: false
     # Whether to run terraform plan before apply in the Apply stage
+  - name: varFile
+    type: string
+    default: ''
+    # Path to terraform variables file (e.g., 'mg.tfvars.json')
+  - name: terraformVariables
+    type: object
+    default: []
+    # Array of objects with 'name' and 'value' properties for Terraform variables
 
 stages:
   # Plan Stage
@@ -59,7 +67,16 @@ stages:
                 # Unlock state if locked (replace with actual lock ID from error if different)
                 # terraform force-unlock -force <LOCK_ID> || echo "Lock already released or unlock failed, continuing..."
                 
-                terraform plan
+                # Build terraform plan command with var file and variables
+                PLAN_CMD="terraform plan"
+                ${{ if ne(parameters.varFile, '') }}:
+                PLAN_CMD="$PLAN_CMD -var-file=\"${{ parameters.varFile }}\""
+                ${{ endif }}:
+                ${{ each var in parameters.terraformVariables }}:
+                PLAN_CMD="$PLAN_CMD -var=\"${{ var.name }}=${{ var.value }}\""
+                ${{ end }}:
+                
+                $PLAN_CMD
 
   # Apply Stage
   - stage: Apply_${{ parameters.resourceType }}_${{ parameters.environment }}
@@ -106,8 +123,17 @@ stages:
                       # Unlock state if locked (replace with actual lock ID from error if different)
                       # terraform force-unlock -force <LOCK_ID> || echo "Lock already released or unlock failed, continuing..."
                       
+                      # Build terraform commands with var file and variables
+                      APPLY_CMD=""
+                      ${{ if ne(parameters.varFile, '') }}:
+                      APPLY_CMD="$APPLY_CMD -var-file=\"${{ parameters.varFile }}\""
+                      ${{ endif }}:
+                      ${{ each var in parameters.terraformVariables }}:
+                      APPLY_CMD="$APPLY_CMD -var=\"${{ var.name }}=${{ var.value }}\""
+                      ${{ end }}:
+                      
                       if [ "${{ parameters.runPlanInApply }}" = "true" ]; then
-                        terraform plan
+                        terraform plan $APPLY_CMD
                       fi
                       
-                      terraform apply -auto-approve
+                      terraform apply -auto-approve $APPLY_CMD

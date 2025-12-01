@@ -117,14 +117,8 @@ npm install
    {
      "mg_prefix": "dev-plb",
      "environment": "dev",
-     "sequence": "001",
      "location": "eastus",
-     "tenant_root_group_id": "<your-tenant-id>",
-     "subscription_ids": [],
-     "tags": {
-       "environment": "dev",
-       "managedBy": "terraform"
-     }
+     "tenant_root_group_id": "<your-tenant-id>"
    }
    ```
 
@@ -210,21 +204,15 @@ Creates a single Azure Management Group resource.
 - `name` - Management group name
 - `display_name` - Display name
 - `parent_management_group_id` - Parent MG ID
-- `subscription_ids` - List of subscription IDs to assign
-- `tags` - Tags to apply
 
 ### Service Module (`modules/services/management-groups/`)
 
 Orchestrates the creation of the entire CAF hierarchy.
 
 **Variables:**
-- `mg_prefix` - Prefix for MG names (e.g., "dev-plb", "test-plb", "plb")
+- `mg_prefix` - Prefix for MG names. Should be shorthand, less than 4 characters, and in uppercase (e.g., "DEV-PLB", "TEST-PLB", "PLB")
 - `tenant_root_group_id` - Tenant root management group ID
 - `environment` - Environment name (dev, test, prod)
-- `sequence` - Sequence number for naming
-- `location` - Azure region
-- `subscription_ids` - Subscriptions to assign to root MG
-- `tags` - Additional tags
 
 **Outputs:**
 - All management group IDs (root, platform, landingzones, sandbox, decommissioned, and all children)
@@ -233,24 +221,22 @@ Orchestrates the creation of the entire CAF hierarchy.
 
 ### JSON Configuration Format
 
-Each `.tfvr.json` file in `mg/` contains environment-specific configuration:
+The `mg.tfvars.json` file contains the base configuration:
 
 ```json
 {
-  "mg_prefix": "dev-plb",
-  "environment": "dev",
-  "sequence": "001",
-  "location": "eastus",
   "tenant_root_group_id": "<tenant-id>",
-  "subscription_ids": [],
-  "tags": {
-    "environment": "dev",
-    "managedBy": "terraform"
-  }
+  "company_prefix": "PLB",
+  "root_display_name": "Root",
+  "first_level_hierarchy": { ... }
 }
 ```
 
-The `main.tf` automatically reads all `.tfvr.json` files and creates management groups for each environment.
+**Configuration Requirements:**
+- `company_prefix` - Should be shorthand, less than 4 characters, and in uppercase (e.g., "PLB")
+- The `mg_prefix` is automatically constructed from `company_prefix` and `environment` (e.g., "dev-PLB", "test-PLB", "PLB" for prod)
+
+The `main.tf` reads the configuration and creates management groups based on the environment variable passed from the pipeline.
 
 ## Development Workflow
 

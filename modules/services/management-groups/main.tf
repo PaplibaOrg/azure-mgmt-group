@@ -1,207 +1,75 @@
 locals {
-  # Define the CAF hierarchy structure
-  mg_hierarchy = {
-    root = {
-      name         = "${var.mg_prefix}-root"
-      display_name = "${title(var.mg_prefix)} Root"
-      parent_id    = var.tenant_root_group_id
-    }
-    platform = {
-      name         = "${var.mg_prefix}-platform"
-      display_name = "Platform"
-      parent_id    = module.root_mg.management_group_id
-    }
-    landingzones = {
-      name         = "${var.mg_prefix}-landingzones"
-      display_name = "Landing Zones"
-      parent_id    = module.root_mg.management_group_id
-    }
-    sandbox = {
-      name         = "${var.mg_prefix}-sandbox"
-      display_name = "Sandbox"
-      parent_id    = module.root_mg.management_group_id
-    }
-    decommissioned = {
-      name         = "${var.mg_prefix}-decommissioned"
-      display_name = "Decommissioned"
-      parent_id    = module.root_mg.management_group_id
-    }
-    # Platform children
-    management = {
-      name         = "${var.mg_prefix}-management"
-      display_name = "Management"
-      parent_id    = module.platform_mg.management_group_id
-    }
-    connectivity = {
-      name         = "${var.mg_prefix}-connectivity"
-      display_name = "Connectivity"
-      parent_id    = module.platform_mg.management_group_id
-    }
-    identity = {
-      name         = "${var.mg_prefix}-identity"
-      display_name = "Identity"
-      parent_id    = module.platform_mg.management_group_id
-    }
-    security = {
-      name         = "${var.mg_prefix}-security"
-      display_name = "Security"
-      parent_id    = module.platform_mg.management_group_id
-    }
-    # Landing Zones children
-    corp = {
-      name         = "${var.mg_prefix}-corp"
-      display_name = "Corp"
-      parent_id    = module.landingzones_mg.management_group_id
-    }
-    online = {
-      name         = "${var.mg_prefix}-online"
-      display_name = "Online"
-      parent_id    = module.landingzones_mg.management_group_id
-    }
+  # Build hierarchy from JSON structure
+  tenant_root  = var.tenant_root
+  first_level  = var.first_level_hierarchy
+  second_level = var.second_hierarchy
+
+  # Flatten first level hierarchy for for_each
+  first_level_mgs = {
+    platform       = local.first_level.platform
+    landingzones   = local.first_level.landingzones
+    sandbox        = local.first_level.sandbox
+    decommissioned = local.first_level.decommissioned
   }
 
-  tags = merge(
+  # Flatten second level hierarchy for for_each
+  # Platform children
+  platform_children = {
+    management   = local.second_level.platform.management
+    connectivity = local.second_level.platform.connectivity
+    identity     = local.second_level.platform.identity
+    security     = local.second_level.platform.security
+  }
+
+  # Landing zones children
+  landingzones_children = {
+    corp   = local.second_level.landingzones.corp
+    online = local.second_level.landingzones.online
+  }
+
+  # Combine all second level MGs with their parent key
+  second_level_mgs = merge(
     {
-      environment = var.environment
-      managedBy   = "terraform"
+      for key, value in local.platform_children :
+      "platform-${key}" => {
+        mg_config  = value
+        parent_key = "platform"
+      }
     },
-    var.tags
+    {
+      for key, value in local.landingzones_children :
+      "landingzones-${key}" => {
+        mg_config  = value
+        parent_key = "landingzones"
+      }
+    }
   )
 }
 
 # Root Management Group
 module "root_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.root.name
-  display_name               = local.mg_hierarchy.root.display_name
-  parent_management_group_id = local.mg_hierarchy.root.parent_id
-  subscription_ids           = var.subscription_ids
-  tags                       = local.tags
+  source                     = "../../resources/management-group"
+  name                       = local.tenant_root.name
+  display_name               = local.tenant_root.display_name
+  parent_management_group_id = var.tenant_root_group_id
 }
 
-# Platform Management Group
-module "platform_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.platform.name
-  display_name               = local.mg_hierarchy.platform.display_name
-  parent_management_group_id = local.mg_hierarchy.platform.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.root_mg]
+# First Level Hierarchy - Create all first-level MGs
+module "first_level_mgs" {
+  source                     = "../../resources/management-group"
+  for_each                   = local.first_level_mgs
+  name                       = each.value.name
+  display_name               = each.value.display_name
+  parent_management_group_id = module.root_mg.management_group_id
+  depends_on                 = [module.root_mg]
 }
 
-# Landing Zones Management Group
-module "landingzones_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.landingzones.name
-  display_name               = local.mg_hierarchy.landingzones.display_name
-  parent_management_group_id = local.mg_hierarchy.landingzones.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.root_mg]
-}
-
-# Sandbox Management Group
-module "sandbox_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.sandbox.name
-  display_name               = local.mg_hierarchy.sandbox.display_name
-  parent_management_group_id = local.mg_hierarchy.sandbox.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.root_mg]
-}
-
-# Decommissioned Management Group
-module "decommissioned_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.decommissioned.name
-  display_name               = local.mg_hierarchy.decommissioned.display_name
-  parent_management_group_id = local.mg_hierarchy.decommissioned.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.root_mg]
-}
-
-# Platform Children
-module "management_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.management.name
-  display_name               = local.mg_hierarchy.management.display_name
-  parent_management_group_id = local.mg_hierarchy.management.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.platform_mg]
-}
-
-module "connectivity_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.connectivity.name
-  display_name               = local.mg_hierarchy.connectivity.display_name
-  parent_management_group_id = local.mg_hierarchy.connectivity.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.platform_mg]
-}
-
-module "identity_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.identity.name
-  display_name               = local.mg_hierarchy.identity.display_name
-  parent_management_group_id = local.mg_hierarchy.identity.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.platform_mg]
-}
-
-module "security_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.security.name
-  display_name               = local.mg_hierarchy.security.display_name
-  parent_management_group_id = local.mg_hierarchy.security.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.platform_mg]
-}
-
-# Landing Zones Children
-module "corp_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.corp.name
-  display_name               = local.mg_hierarchy.corp.display_name
-  parent_management_group_id = local.mg_hierarchy.corp.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.landingzones_mg]
-}
-
-module "online_mg" {
-  source = "../../resources/management-group"
-
-  name                       = local.mg_hierarchy.online.name
-  display_name               = local.mg_hierarchy.online.display_name
-  parent_management_group_id = local.mg_hierarchy.online.parent_id
-  subscription_ids           = []
-  tags                       = local.tags
-
-  depends_on = [module.landingzones_mg]
+# Second Level Hierarchy - Create all second-level MGs
+module "second_level_mgs" {
+  source                     = "../../resources/management-group"
+  for_each                   = local.second_level_mgs
+  name                       = each.value.mg_config.name
+  display_name               = each.value.mg_config.display_name
+  parent_management_group_id = module.first_level_mgs[each.value.parent_key].management_group_id
+  depends_on                 = [module.first_level_mgs]
 }

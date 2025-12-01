@@ -1,21 +1,18 @@
 locals {
-  # Read all .tfvr.json files in the current directory
-  json_object_map = {
-    for file in fileset(path.module, "*.tfvr.json") :
-    replace(file, ".tfvr.json", "") => jsondecode(file("${path.module}/${file}"))
-  }
+  mg_config = jsondecode(file("mg.json"))
 }
 
-module "management_groups" {
-  source = "../modules/services/management-groups"
+# module "management_groups" {
+#   source = "../modules/services/management-groups"
+#   mg_prefix             = local.mg_prefix
+#   company_prefix        = local.base_config.company_prefix
+#   tenant_root_group_id  = local.base_config.tenant_root_group_id
+#   environment           = local.base_config.environment
+#   tenant_root           = local.tenant_root
+#   first_level_hierarchy = local.first_level_hierarchy
+#   second_hierarchy      = local.second_hierarchy
+# }
 
-  for_each = local.json_object_map
-
-  mg_prefix            = each.value.mg_prefix
-  tenant_root_group_id = each.value.tenant_root_group_id
-  environment          = each.value.environment
-  sequence             = each.value.sequence
-  location             = each.value.location
-  subscription_ids     = lookup(each.value, "subscription_ids", [])
-  tags                 = lookup(each.value, "tags", {})
+output "mg_config" {
+  value = local.mg_config
 }
