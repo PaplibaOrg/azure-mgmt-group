@@ -25,7 +25,6 @@ stages:
       resourceType: 'MG'
       resourceDisplayName: 'Management Groups'
       runPlanInApply: false
-      varFile: 'mg.tfvars.json'
 
   # # Test Environment - Plan, Approval, Apply
   # - template: templates/deploy-terraform.yaml
