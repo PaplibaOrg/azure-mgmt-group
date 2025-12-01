@@ -1,7 +1,6 @@
 {
   "tenant_root_group_id": "99e184df-412c-45ed-b033-63f70449fe62",
   "company_prefix": "PLB",
-  "environment": "DEV",
   "root_display_name": "Root",
   "first_level_hierarchy": {
     "platform": {

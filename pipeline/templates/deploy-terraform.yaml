@@ -60,4 +60,5 @@ stages:
                 # Unlock state if locked (replace with actual lock ID from error if different)
                 # terraform force-unlock -force <LOCK_ID> || echo "Lock already released or unlock failed, continuing..."
                 
-                terraform plan
+                # Run plan and pass environment as a Terraform variable
+                terraform plan -var "environment=${{ parameters.environment }}"
