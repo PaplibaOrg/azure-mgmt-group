@@ -23,18 +23,19 @@ variable "environment" {
   }
 }
 
-variable "tenant" {
-  description = "Tenant root management group configuration"
-  type = object({
-    management_group_id = string
-  })
+variable "tenant_management_group_id" {
+  description = "Tenant root management group ID"
+  type        = string
 }
 
-variable "root" {
-  description = "Environment root management group configuration"
-  type = object({
-    display_name = string
-  })
+variable "root_management_group_id" {
+  description = "Environment root management group ID"
+  type        = string
+}
+
+variable "root_display_name" {
+  description = "Environment root management group display name"
+  type        = string
 }
 
 # variable "first_level_hierarchy" {

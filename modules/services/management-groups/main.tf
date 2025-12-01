@@ -48,9 +48,9 @@
 
 module "root_mg" {
   source                     = "../../resources/management-group"
-  id                         = var.root.management_group_id
-  display_name               = var.root.display_name
-  parent_management_group_id = var.tenant.management_group_id
+  id                         = var.root_management_group_id
+  display_name               = var.root_display_name
+  parent_management_group_id = var.tenant_management_group_id
 }
 
 # # First Level Hierarchy - Create all first-level MGs
