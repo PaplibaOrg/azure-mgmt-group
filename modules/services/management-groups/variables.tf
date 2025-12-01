@@ -13,15 +13,15 @@
 #   }
 # }
 
-# variable "environment" {
-#   description = "Environment name. Only DEV, TEST, and PROD are allowed."
-#   type        = string
+variable "environment" {
+  description = "Environment name. Only DEV, TEST, and PROD are allowed."
+  type        = string
 
-#   validation {
-#     condition     = contains(["DEV", "TEST", "PROD"], upper(var.environment))
-#     error_message = "environment must be one of: DEV, TEST, PROD."
-#   }
-# }
+  validation {
+    condition     = contains(["DEV", "TEST", "PROD"], upper(var.environment))
+    error_message = "environment must be one of: DEV, TEST, PROD."
+  }
+}
 
 variable "tenant" {
   description = "Tenant root management group configuration"
