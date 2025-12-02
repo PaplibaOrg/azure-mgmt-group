@@ -12,13 +12,35 @@ pool: default
 
 variables:
   serviceConnectionDev: 'id-mg-vending-eus-dev-001'
+  serviceConnectionTest: 'id-mg-vending-eus-test-001'
+  serviceConnectionProd: 'id-mg-vending-eus-prod-001'
 
 stages:
   # Dev Environment - Plan and Apply
   - template: templates/deploy-terraform.yaml
     parameters:
       serviceConnection: $(serviceConnectionDev)
-      environment: 'Dev'
+      environment: 'dev'
+      workingDirectory: 'mg'
+      resourceType: 'MG'
+      resourceDisplayName: 'Management Groups'
+      runPlanInApply: false
+
+  # Test Environment - Plan and Apply
+  - template: templates/deploy-terraform.yaml
+    parameters:
+      serviceConnection: $(serviceConnectionTest)
+      environment: 'test'
+      workingDirectory: 'mg'
+      resourceType: 'MG'
+      resourceDisplayName: 'Management Groups'
+      runPlanInApply: false
+
+  # Prod Environment - Plan and Apply
+  - template: templates/deploy-terraform.yaml
+    parameters:
+      serviceConnection: $(serviceConnectionProd)
+      environment: 'prod'
       workingDirectory: 'mg'
       resourceType: 'MG'
       resourceDisplayName: 'Management Groups'
