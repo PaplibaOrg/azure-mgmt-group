@@ -12,13 +12,13 @@ locals {
 }
 
 module "management_groups" {
-  source                             = "../modules/services/management-groups"
-  company_prefix                     = local.json_object.company_prefix
-  environment                        = var.environment
-  tenant_management_group_id         = local.json_object.mg_structure.tenant.id
-  root_management_group_display_name = local.json_object.mg_structure.tenant.root.display_name
-  first_level_hierarchy              = local.json_object.mg_structure.tenant.root.first_level_hierarchy
-  second_level_hierarchy             = try(local.json_object.mg_structure.tenant.root.second_level_hierarchy, {})
+  source                     = "../modules/services/management-groups"
+  company_prefix             = local.json_object.company_prefix
+  environment                = var.environment
+  tenant_management_group_id = local.json_object.mg_structure.tenant.id
+  root_management_group_id   = local.json_object.mg_structure.tenant.root.id
+  first_level_hierarchy      = local.json_object.mg_structure.tenant.root.first_level_hierarchy
+  second_level_hierarchy     = try(local.json_object.mg_structure.tenant.root.second_level_hierarchy, {})
 }
 
 output "mg_json_object" {

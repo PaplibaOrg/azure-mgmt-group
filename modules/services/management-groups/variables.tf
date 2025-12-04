@@ -23,8 +23,8 @@ variable "tenant_management_group_id" {
   type        = string
 }
 
-variable "root_management_group_display_name" {
-  description = "Environment root management group display name"
+variable "root_management_group_id" {
+  description = "The ID of the manually created root management group"
   type        = string
 }
 
