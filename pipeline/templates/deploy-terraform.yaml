@@ -104,6 +104,3 @@ stages:
 
                 # Run apply and pass environment as a Terraform variable
                 terraform apply -auto-approve -var "environment=${{ parameters.environment }}"
-
-
-

@@ -21,7 +21,7 @@ locals {
 module "first_level_mgs" {
   source                     = "../../resources/management-group"
   for_each                   = var.first_level_hierarchy
-  display_name               = local.is_prod ? each.value.display_name : "${var.environment} ${each.value.display_name}"
+  display_name               = each.value.display_name
   id                         = local.is_prod ? lower(each.key) : lower("${var.environment}-${each.key}")
   parent_management_group_id = local.root_management_group_id
 }
@@ -30,7 +30,7 @@ module "first_level_mgs" {
 module "second_level_mgs" {
   source                     = "../../resources/management-group"
   for_each                   = local.second_level_mgs
-  display_name               = local.is_prod ? each.value.display_name : "${var.environment} ${each.value.display_name}"
+  display_name               = each.value.display_name
   id                         = local.is_prod ? lower(each.key) : lower("${var.environment}-${each.key}")
   parent_management_group_id = module.first_level_mgs[each.value.parent_key].management_group_id
   depends_on                 = [module.first_level_mgs]
