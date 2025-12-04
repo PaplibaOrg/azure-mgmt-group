@@ -26,25 +26,25 @@ stages:
       resourceDisplayName: 'Management Groups'
       runPlanInApply: false
 
-  # Test Environment - Plan and Apply
-  - template: templates/deploy-terraform.yaml
-    parameters:
-      serviceConnection: $(serviceConnectionTest)
-      environment: 'test'
-      workingDirectory: 'mg'
-      resourceType: 'MG'
-      resourceDisplayName: 'Management Groups'
-      runPlanInApply: false
-
-  # Prod Environment - Plan and Apply
-  - template: templates/deploy-terraform.yaml
-    parameters:
-      serviceConnection: $(serviceConnectionProd)
-      environment: 'prod'
-      workingDirectory: 'mg'
-      resourceType: 'MG'
-      resourceDisplayName: 'Management Groups'
-      runPlanInApply: false
-
-
-
+  # # Test Environment - Plan and Apply
+  # - template: templates/deploy-terraform.yaml
+  #   parameters:
+  #     serviceConnection: $(serviceConnectionTest)
+  #     environment: 'test'
+  #     workingDirectory: 'mg'
+  #     resourceType: 'MG'
+  #     resourceDisplayName: 'Management Groups'
+  #     runPlanInApply: false
+  #
+  # # Prod Environment - Plan and Apply
+  # - template: templates/deploy-terraform.yaml
+  #   parameters:
+  #     serviceConnection: $(serviceConnectionProd)
+  #     environment: 'prod'
+  #     workingDirectory: 'mg'
+  #     resourceType: 'MG'
+  #     resourceDisplayName: 'Management Groups'
+  #     runPlanInApply: false
+  #
+  #
+  #

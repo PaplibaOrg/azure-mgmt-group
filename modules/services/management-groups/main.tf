@@ -2,6 +2,10 @@ locals {
   # For PROD, don't include environment prefix in names/IDs
   is_prod = upper(var.environment) == "PROD"
   
+  # Construct root MG ID based on naming convention
+  root_mg_name = local.is_prod ? lower("${var.company_prefix}-${var.root_management_group_display_name}") : lower("${var.environment}-${var.company_prefix}-${var.root_management_group_display_name}")
+  root_management_group_id = "/providers/Microsoft.Management/managementGroups/${local.root_mg_name}"
+  
   # Flatten second_level_hierarchy for for_each
   second_level_mgs = merge([
     for parent_key, children in var.second_level_hierarchy : {
@@ -19,7 +23,7 @@ module "first_level_mgs" {
   for_each                   = var.first_level_hierarchy
   display_name               = local.is_prod ? each.value.display_name : "${var.environment} ${each.value.display_name}"
   id                         = local.is_prod ? lower(each.key) : lower("${var.environment}-${each.key}")
-  parent_management_group_id = var.root_management_group_id
+  parent_management_group_id = local.root_management_group_id
 }
 
 # Second Level Hierarchy - Create all second-level MGs
