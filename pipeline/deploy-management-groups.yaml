@@ -45,3 +45,6 @@ stages:
       resourceType: 'MG'
       resourceDisplayName: 'Management Groups'
       runPlanInApply: false
+
+
+

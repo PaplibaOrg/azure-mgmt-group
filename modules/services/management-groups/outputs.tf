@@ -69,3 +69,6 @@
 #   description = "The ID of the online management group"
 #   value       = module.second_level_mgs["landingzones-online"].management_group_id
 # }
+
+
+

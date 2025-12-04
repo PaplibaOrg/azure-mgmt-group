@@ -43,3 +43,6 @@ module "second_level_mgs" {
   parent_management_group_id = module.first_level_mgs[each.value.parent_key].management_group_id
   depends_on                 = [module.first_level_mgs]
 }
+
+
+
