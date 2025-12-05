@@ -20,6 +20,14 @@ parameters:
   - name: terraformVariables
     type: object
     default: []
+  - name: backendResourceGroupName
+    type: string
+  - name: backendStorageAccountName
+    type: string
+  - name: backendContainerName
+    type: string
+  - name: backendKey
+    type: string
 
 stages:
   # Plan Stage
@@ -60,13 +68,20 @@ stages:
                 echo "ARM_CLIENT_ID: $CLIENT_ID"
                 echo "ARM_USE_OIDC: $ARM_USE_OIDC"
 
-                terraform init -upgrade
+                terraform init -upgrade \
+                  -backend-config="resource_group_name=${{ parameters.backendResourceGroupName }}" \
+                  -backend-config="storage_account_name=${{ parameters.backendStorageAccountName }}" \
+                  -backend-config="container_name=${{ parameters.backendContainerName }}" \
+                  -backend-config="key=${{ parameters.backendKey }}"
 
                 # Unlock state if locked (replace with actual lock ID from error if different)
-                # terraform force-unlock -force <LOCK_ID> || echo "Lock already released or unlock failed, continuing..."
+                # terraform force-unlock -force 61227d1a-381b-6676-dfa7-fa3b93ce9895 || echo "Lock already released or unlock failed, continuing..."
                 
                 # Run plan and pass environment as a Terraform variable
                 terraform plan -var "environment=${{ parameters.environment }}"
+
+                # terraform import -var "environment=test" 'module.management_groups.module.first_level_mgs["platform"].azurerm_management_group.mg' /providers/Microsoft.Management/managementGroups/test-platform
+
 
   # Apply Stage
   - stage: Apply_${{ parameters.resourceType }}_${{ parameters.environment }}
@@ -112,7 +127,11 @@ stages:
                       echo "ARM_CLIENT_ID: $CLIENT_ID"
                       echo "ARM_USE_OIDC: $ARM_USE_OIDC"
 
-                      terraform init -upgrade
+                      terraform init -upgrade \
+                        -backend-config="resource_group_name=${{ parameters.backendResourceGroupName }}" \
+                        -backend-config="storage_account_name=${{ parameters.backendStorageAccountName }}" \
+                        -backend-config="container_name=${{ parameters.backendContainerName }}" \
+                        -backend-config="key=${{ parameters.backendKey }}"
 
                       # Optionally run plan before apply if runPlanInApply is true
                       if [ "${{ parameters.runPlanInApply }}" = "true" ]; then
