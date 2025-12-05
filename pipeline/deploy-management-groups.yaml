@@ -15,12 +15,16 @@ variables:
   serviceConnectionDev: 'id-mg-vending-eus-dev-001'
   serviceConnectionTest: 'id-mg-vending-eus-test-001'
   serviceConnectionProd: 'id-mg-vending-eus-prod-001'
+  subscriptionIdDev: '243c3cf8-1a50-4b3c-a45e-0d1f0a82a37b'
+  subscriptionIdTest: 'b7762cc9-e968-4152-9cb5-f283738190f4'
+  subscriptionIdProd: 'ef4541ca-58de-411a-bed5-3127d75ee4a2'
 
 stages:
   # Dev Environment - Plan and Apply
   - template: templates/deploy-terraform.yaml
     parameters:
       serviceConnection: $(serviceConnectionDev)
+      subscriptionId: $(subscriptionIdDev)
       environment: 'dev'
       workingDirectory: 'mg'
       resourceType: 'MG'
@@ -31,6 +35,7 @@ stages:
   - template: templates/deploy-terraform.yaml
     parameters:
       serviceConnection: $(serviceConnectionTest)
+      subscriptionId: $(subscriptionIdTest)
       environment: 'test'
       workingDirectory: 'mg'
       resourceType: 'MG'
@@ -41,6 +46,7 @@ stages:
   - template: templates/deploy-terraform.yaml
     parameters:
       serviceConnection: $(serviceConnectionProd)
+      subscriptionId: $(subscriptionIdProd)
       environment: 'prod'
       workingDirectory: 'mg'
       resourceType: 'MG'
