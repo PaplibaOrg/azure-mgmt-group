@@ -12,6 +12,7 @@ locals {
       for child_key, child_value in children :
       "${parent_key}-${child_key}" => {
         parent_key   = parent_key
+        child_key    = child_key
         display_name = child_value.display_name
       }
     }
@@ -31,7 +32,7 @@ module "second_level_mgs" {
   source                     = "../../resources/management-group"
   for_each                   = local.second_level_mgs
   display_name               = each.value.display_name
-  id                         = local.is_prod ? lower(each.key) : lower("${var.environment}-${each.key}")
+  id                         = local.is_prod ? lower(each.value.child_key) : lower("${var.environment}-${each.value.child_key}")
   parent_management_group_id = module.first_level_mgs[each.value.parent_key].management_group_id
   depends_on                 = [module.first_level_mgs]
 }
